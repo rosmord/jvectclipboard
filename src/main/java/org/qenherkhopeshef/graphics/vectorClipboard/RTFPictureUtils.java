@@ -19,7 +19,6 @@ public class RTFPictureUtils {
 	 * Create a byteArrayInput stream containing a RTF containing a picture.
 	 * 
 	 * @param picture
-	 * @return
 	 * @throws IOException
 	 */
 	public static ByteArrayInputStream createRTFByteArrayInputStream(

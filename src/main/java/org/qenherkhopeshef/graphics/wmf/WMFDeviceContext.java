@@ -157,7 +157,7 @@ public class WMFDeviceContext implements WMFFunctionCodes, WMFConstants {
 
 	/**
 	 * Arc from an ellipse described by top,left,... The Arc itself is described
-	 * by xstart & co
+	 * by xstart &amp; co
 	 * 
 	 * @param left
 	 * @param top
@@ -277,7 +277,7 @@ public class WMFDeviceContext implements WMFFunctionCodes, WMFConstants {
 	 *            PS_DASHDOTDOT, PS_NULL, PS_INSIDEFRAME, PS_USERSTYLE,
 	 *            PS_ALTERNATE
 	 * @param width :
-	 *            width of the pen, if > 1, will force style to solid.
+	 *            width of the pen, if &gt; 1, will force style to solid.
 	 * @param colour :
 	 *            colour of the pen
 	 * @return the pen object's id.

@@ -48,7 +48,7 @@ public class RandomAccessStreamUtils {
 	/**
 	 * Write an unsigned 32 bits value.
 	 * @param out
-	 * @param recordType
+	 * @param x32
 	 */
 	public static void writeU32(RandomAccessStream out, long x32) {
 		int s0, s1, s2, s3;

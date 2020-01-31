@@ -54,7 +54,6 @@ public abstract class RTFPicture implements TransferablePicture {
 
 	/**
 	 * Used by children classes to define how they create a transferable when used outside of an RTF picture.
-	 * @return
 	 */
 	protected abstract Transferable buildStandAloneTransferable();
 }

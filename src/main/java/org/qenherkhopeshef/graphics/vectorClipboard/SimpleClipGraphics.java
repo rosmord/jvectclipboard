@@ -60,7 +60,6 @@ public class SimpleClipGraphics {
 	 * Returns a Graphics2D object. The scale used is 1 unit = 1 typographical
 	 * point.
 	 * 
-	 * @return
 	 */
 
 	public Graphics2D getGraphics() {
@@ -109,7 +108,6 @@ public class SimpleClipGraphics {
 	 * Returns the vector format used for the picture (EMF, WMF...)
 	 * 
 	 * @see PictureFormat
-	 * @return
 	 */
 	public int getPictureFormat() {
 		return pictureFormat;

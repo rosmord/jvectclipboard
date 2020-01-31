@@ -74,7 +74,7 @@ public class EMFGraphics2D extends BaseGraphics2D {
 	/**
 	 * Create a picture which without margin.
 	 * 
-	 * @param out
+	 * @param stream
 	 * @param dims pictures dimensions, in <strong>points</strong>
 	 * @param creator
 	 *            software creating the picture (may be null)
@@ -161,8 +161,6 @@ public class EMFGraphics2D extends BaseGraphics2D {
 	/**
 	 * 
 	 * Sets an explicit clip rectangle for the mac picture.
-	 * 
-	 * @param dimension
 	 */
 	public void setPictureClip(double minx, double miny, double maxx,
 			double maxy) {

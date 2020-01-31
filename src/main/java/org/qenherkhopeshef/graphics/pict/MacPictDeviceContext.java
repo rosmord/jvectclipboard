@@ -10,8 +10,7 @@ import java.io.OutputStream;
 /**
  * Low level device to draw in mac picture format.
  * <p>
- * Generic remarks on quickdraw:
- * <ul>
+ * Generic remarks on quickdraw:</p>
  * <ul>
  * <li> the internal representation of numbers is big endian.
  * <li> coordinates are 2 bytes long, signed (hence from -32 768 to 32767)
@@ -142,7 +141,6 @@ public class MacPictDeviceContext implements MacPictOpcodes {
 	/**
 	 * Return the content of the device context as a byte array.
 	 * 
-	 * @return
 	 * @see org.qenherkhopeshef.graphics.pict.SimpleByteBuffer#getAsArray()
 	 */
 
@@ -152,8 +150,6 @@ public class MacPictDeviceContext implements MacPictOpcodes {
 
 	/**
 	 * In RTF files, the first 512 null bytes are not included.
-	 * 
-	 * @return
 	 */
 	public byte[] getAsArrayForRTF() {
 		return buffer.getAsArray(0x200);

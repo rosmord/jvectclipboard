@@ -93,7 +93,6 @@ public class SimpleByteBuffer {
 
 	/**
 	 * Return the buffer as a byte array.
-	 * @return
 	 */
 	public byte[] getAsArray() {
 		byte[] result = new byte[size];
@@ -104,7 +103,6 @@ public class SimpleByteBuffer {
 	/**
 	 * Return a sub-buffer.
 	 * @param start
-	 * @return
 	 */
 	public byte[] getAsArray(int start) {
 		byte[] result = new byte[size-start];

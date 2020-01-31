@@ -79,7 +79,6 @@ public class MacPictGraphics2D extends BaseGraphics2D {
 	
 	/**
 	 * Gets the picture DPI resolution.
-	 * @return
 	 * @see org.qenherkhopeshef.graphics.pict.MacPictDeviceContext#getDpi()
 	 */
 	public int getDpi() {
@@ -99,7 +98,6 @@ public class MacPictGraphics2D extends BaseGraphics2D {
 
 	/**
 	 * Sets an explicit clip rectangle for the mac picture.
-	 * @param dimension
 	 */
 	public void setPictureClip(double minx, double miny, double maxx, double maxy) {
 		Point2D p1a= new  Point2D.Double(minx,miny);
@@ -395,7 +393,6 @@ public class MacPictGraphics2D extends BaseGraphics2D {
 	/**
 	 * Return an array suitable for inclusion in RTF files.
 	 * In RTF files, the first 256 null bytes are not included. 
-	 * @return
 	 */
 	public byte[] getAsArrayForRTF() {
 		return deviceContext.getAsArrayForRTF();

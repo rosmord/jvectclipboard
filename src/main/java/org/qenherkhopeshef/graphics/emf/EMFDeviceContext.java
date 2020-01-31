@@ -269,7 +269,6 @@ public class EMFDeviceContext implements EMFOpCodes {
 	 *            pen width
 	 * @param colour
 	 *            pen colour.
-	 * @return
 	 * @throws IOException
 	 */
 	public short createPen(int penStyle, int width, long colour)
@@ -523,7 +522,6 @@ public class EMFDeviceContext implements EMFOpCodes {
 	/**
 	 * Returns the length (in mm) of one horizontal device unit.
 	 * 
-	 * @return
 	 */
 	public double getXScale() {
 		return (double) header.widthDevMM / header.widthDevPixels;
@@ -532,7 +530,6 @@ public class EMFDeviceContext implements EMFOpCodes {
 	/**
 	 * Returns the length (in mm) of one vertical device unit.
 	 * 
-	 * @return
 	 */
 	public double getYScale() {
 		return (double) header.heightDevMM / header.heightDevPixels;
@@ -742,8 +739,8 @@ public class EMFDeviceContext implements EMFOpCodes {
 	}
 
 	/**
-	 * @param i
-	 * @param j
+	 * @param x
+	 * @param y
 	 * @throws IOException
 	 */
 	public void setWindowOrg(int x, int y) throws IOException {
@@ -753,8 +750,8 @@ public class EMFDeviceContext implements EMFOpCodes {
 	/**
 	 * Sets the reference window extension.
 	 * 
-	 * @param i
-	 * @param j
+	 * @param w
+	 * @param h
 	 * @throws IOException
 	 */
 	public void setWindowExt(int w, int h) throws IOException {
