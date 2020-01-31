@@ -1,0 +1,38 @@
+plugins {
+    // Apply the java plugin to add support for Java
+    id 'java'
+
+    // Apply the application plugin to add support for building an application
+    id 'application'
+}
+
+repositories {
+    jcenter()
+    mavenLocal()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    // This dependency is found on compile classpath of this component and consumers.
+    implementation 'org.qenherkhopeshef:jvectClipboard:8.0.0'
+    implementation 'com.lowagie:itext:2.1.5'  
+
+    // Use JUnit test framework
+    testImplementation 'junit:junit:4.12'
+}
+
+// Define the main class for the application
+mainClassName = 'org.qenherkhopeshef.demo.JVectClipboardTest'
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': "${mainClassName}",
+            'Class-Path': configurations.runtimeClasspath.files.collect { it.getName() }.join(' ')
+        )
+    }
+}
