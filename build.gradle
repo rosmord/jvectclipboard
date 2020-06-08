@@ -33,14 +33,26 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
+task doSign {
+  dependsOn build
+}
+
 artifacts {
     archives javadocJar, sourcesJar
 }
+
+
+tasks.withType(Sign) {
+    onlyIf { gradle.taskGraph.hasTask(":doSign")  }
+}
+
 
 signing {
     useGpgCmd()
     sign configurations.archives
 }
+
+uploadArchives.dependsOn(doSign)
 
 uploadArchives {
   repositories {
