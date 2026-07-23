@@ -15,20 +15,34 @@ package org.qenherkhopeshef.graphics.generic;
  * @author rosmord
  */
 public class BaseGraphics2DException extends Exception {
+    /** The wrapped exception, or null if none. */
     private Exception baseException=null;
     
     /**
-     * 
+     * Builds an exception wrapping another one.
+     *
+     * @param baseException the underlying exception (typically an IOException).
      */
     public BaseGraphics2DException(Exception baseException) {
         super(baseException.getMessage());
         this.baseException= baseException;
     }
-    
+
+    /**
+     * Builds an exception with an error message.
+     *
+     * @param message the error message.
+     */
     public BaseGraphics2DException(String message) {
         super(message);
     }
-    
+
+    /**
+     * Builds an exception with an error message, wrapping another exception.
+     *
+     * @param message the error message.
+     * @param baseException the underlying exception (typically an IOException).
+     */
     public BaseGraphics2DException(String message, Exception baseException) {
         super(message);
         this.baseException= baseException; 

@@ -92,6 +92,10 @@ public abstract class BaseGraphics2D extends Graphics2D {
 
 	private HashMap renderingHints = new HashMap();
 
+	/**
+	 * Creates a graphic context with default background (white), foreground
+	 * (black), font, stroke and transform.
+	 */
 	protected BaseGraphics2D() {
 		currentBackground = Color.WHITE;
 		currentForeground = Color.BLACK;
@@ -638,9 +642,9 @@ public abstract class BaseGraphics2D extends Graphics2D {
 	 * <p>
 	 * The path is not closed, but a simple closePath command will do.
 	 * 
-	 * @param xPoints
-	 * @param yPoints
-	 * @param nPoints
+	 * @param xPoints the x coordinates of the polyline points.
+	 * @param yPoints the y coordinates of the polyline points.
+	 * @param nPoints the number of points to use in the two arrays.
 	 * @return a path, or null if nPoints is 0.
 	 */
 	protected GeneralPath getPathFor(int[] xPoints, int[] yPoints, int nPoints) {
@@ -893,8 +897,8 @@ public abstract class BaseGraphics2D extends Graphics2D {
 	/**
 	 * Communicates properties (which can be used as a generic system for
 	 * parameters) to the graphic system.
-	 * 
-	 * @param properties
+	 *
+	 * @param properties the properties to pass to the graphic system.
 	 */
 	public abstract void setProperties(Properties properties);
 

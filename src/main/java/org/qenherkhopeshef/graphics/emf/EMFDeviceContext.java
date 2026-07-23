@@ -71,7 +71,7 @@ public class EMFDeviceContext implements EMFOpCodes {
 	 *            needed).
 	 * @param comment
 	 *            a free text comment (may be null)
-	 * @throws IOException
+	 * @throws IOException if the stream cannot be written to.
 	 */
 	public EMFDeviceContext(RandomAccessStream stream, Dimension dims,
 			String creator, String comment) throws IOException {
@@ -86,7 +86,7 @@ public class EMFDeviceContext implements EMFOpCodes {
 	 * If both software name and comments are null, the EMF file will have no
 	 * comment.
 	 * 
-	 * @param stream
+	 * @param stream the stream where the data will be written.
 	 * @param width
 	 *            : width in device points
 	 * @param height
@@ -96,17 +96,27 @@ public class EMFDeviceContext implements EMFOpCodes {
 	 *            needed).
 	 * @param comment
 	 *            a free text comment (may be null)
-	 * @throws IOException
+	 * @throws IOException if the stream cannot be written to.
 	 */
 	public EMFDeviceContext(RandomAccessStream stream, long width, long height,
 			String creator, String comment) throws IOException {
 		initLowLevelGraphics(stream, width, height, creator, comment);
 	}
 
+	/**
+	 * Starts a new path.
+	 *
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public void beginPath() throws IOException {
 		addCommand(EMR_BEGINPATH);
 	}
 
+	/**
+	 * Writes the end-of-file record and the header, then closes the stream.
+	 *
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public void closeMetafile() throws IOException {
 		// We need to specify that there is no palette
 		addCommandABC(EMR_EOF, 0, 0x10, 0x14);
@@ -116,11 +126,22 @@ public class EMFDeviceContext implements EMFOpCodes {
 		out.close();
 	}
 
+	/**
+	 * Deletes a graphical object and frees its handle.
+	 *
+	 * @param nobj the object id, as returned when the object was created.
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public void deleteObject(int nobj) throws IOException {
 		objects.set(nobj, Boolean.FALSE);
 		addCommandX(EMR_DELETEOBJECT, nobj);
 	}
 
+	/**
+	 * Ends the current path.
+	 *
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public void endPath() throws IOException {
 		addCommand(EMR_ENDPATH);
 	}
@@ -128,8 +149,8 @@ public class EMFDeviceContext implements EMFOpCodes {
 	/**
 	 * fill the last path. We should probably pass the dimensions as an
 	 * argument.
-	 * 
-	 * @throws IOException
+	 *
+	 * @throws IOException if the stream cannot be written to.
 	 */
 	public void fillPath() throws IOException {
 		addRecordWithByteNumber(EMR_FILLPATH, 16);
@@ -141,10 +162,11 @@ public class EMFDeviceContext implements EMFOpCodes {
 	}
 
 	/**
-	 * 
-	 * @param x
-	 * @param y
-	 * @throws IOException
+	 * Draws a line from the current point to the given point.
+	 *
+	 * @param x the destination point x coordinate.
+	 * @param y the destination point y coordinate.
+	 * @throws IOException if the stream cannot be written to.
 	 */
 	public void lineTo(long x, long y) throws IOException {
 		addCommandXY(EMR_LINETO, x, y);
@@ -152,10 +174,10 @@ public class EMFDeviceContext implements EMFOpCodes {
 
 	/**
 	 * Moves the current point.
-	 * 
-	 * @param x
-	 * @param y
-	 * @throws IOException
+	 *
+	 * @param x the new current point x coordinate.
+	 * @param y the new current point y coordinate.
+	 * @throws IOException if the stream cannot be written to.
 	 */
 	public void moveToEx(long x, long y) throws IOException {
 		addCommandXY(EMR_MOVETOEX, x, y);
@@ -166,8 +188,8 @@ public class EMFDeviceContext implements EMFOpCodes {
 	 * 
 	 * @param boundingBox
 	 *            can be null, in which case it is computed.
-	 * @param controls
-	 * @throws IOException
+	 * @param controls the Bezier control points.
+	 * @throws IOException if the stream cannot be written to.
 	 */
 	public void polyBezierTo(EMFRectangle boundingBox, EMFPoint controls[])
 			throws IOException {
@@ -211,9 +233,9 @@ public class EMFDeviceContext implements EMFOpCodes {
 	 * 
 	 * @param boundingBox
 	 *            : can't be null.
-	 * 
-	 * @param controls
-	 * @throws IOException
+	 *
+	 * @param controls the Bezier control points.
+	 * @throws IOException if the stream cannot be written to.
 	 */
 	public void polyBezierTo16(EMFRectangle boundingBox, EMFPoint controls[])
 			throws IOException {
@@ -241,7 +263,7 @@ public class EMFDeviceContext implements EMFOpCodes {
 	 * @param style
 	 *            (a brush style from WMFConstants: BS_something.)
 	 * @return the object id for this brush.
-	 * @throws IOException
+	 * @throws IOException if the stream cannot be written to.
 	 * @see WMFConstants
 	 */
 	public short createBrush(long hatch, long colour, long style)
@@ -269,7 +291,8 @@ public class EMFDeviceContext implements EMFOpCodes {
 	 *            pen width
 	 * @param colour
 	 *            pen colour.
-	 * @throws IOException
+	 * @return the object id for this pen.
+	 * @throws IOException if the stream cannot be written to.
 	 */
 	public short createPen(int penStyle, int width, long colour)
 			throws IOException {
@@ -290,6 +313,14 @@ public class EMFDeviceContext implements EMFOpCodes {
 		return objectId;
 	}
 
+	/**
+	 * Sets the background colour.
+	 * <p>
+	 * Not implemented yet: currently throws {@link UnsupportedOperationException}.
+	 *
+	 * @param color the background colour, in the form 0xRRGGBB.
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public void setBkColor(long color) throws IOException {
 		if (true) {
 			throw new UnsupportedOperationException("to do.");
@@ -297,6 +328,15 @@ public class EMFDeviceContext implements EMFOpCodes {
 		//addCommandX(EMR_SETBKCOLOR, color);
 	}
 
+	/**
+	 * Strokes the current path, using the given bounding box.
+	 *
+	 * @param minx the left edge of the bounding box.
+	 * @param miny the top edge of the bounding box.
+	 * @param maxx the right edge of the bounding box.
+	 * @param maxy the bottom edge of the bounding box.
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public void strokePath(int minx, int miny, int maxx, int maxy)
 			throws IOException {
 		addRecord(EMR_STROKEPATH, 4);
@@ -330,7 +370,7 @@ public class EMFDeviceContext implements EMFOpCodes {
 	 * 
 	 * @param mapMode
 	 *            one of the MM codes from the WMFConstants interface.
-	 * @throws IOException
+	 * @throws IOException if the stream cannot be written to.
 	 * @see org.qenherkhopeshef.graphics.wmf.WMFConstants
 	 */
 	public void setMapMode(long mapMode) throws IOException {
@@ -458,7 +498,7 @@ public class EMFDeviceContext implements EMFOpCodes {
 	 */
 	private void initLowLevelGraphics(RandomAccessStream stream, long width,
 			long height, String creator, String comment) throws IOException {
-		objects.add(new Integer(0)); // Dummy value. We ge sure that indexes
+		objects.add(Integer.valueOf(0)); // Dummy value. We ge sure that indexes
 		// start at 1.
 		// As objects contains booleans, if there's a bug, this code will cause
 		// an exception.
@@ -505,10 +545,10 @@ public class EMFDeviceContext implements EMFOpCodes {
 	 * The scales are expressed as two couples dXPixels/dxMM and dyPixel/dyMM.
 	 * What's important is the corresponding ratio.
 	 * 
-	 * @param dXpixels
-	 * @param dyPixels
-	 * @param dxMM
-	 * @param dyMM
+	 * @param dXpixels the reference device width, in pixels.
+	 * @param dyPixels the reference device height, in pixels.
+	 * @param dxMM the reference device width, in millimeters.
+	 * @param dyMM the reference device height, in millimeters.
 	 */
 	public void setReferenceRatios(long dXpixels, long dyPixels, long dxMM,
 			long dyMM) {
@@ -521,7 +561,8 @@ public class EMFDeviceContext implements EMFOpCodes {
 
 	/**
 	 * Returns the length (in mm) of one horizontal device unit.
-	 * 
+	 *
+	 * @return the length, in mm, of one horizontal device unit.
 	 */
 	public double getXScale() {
 		return (double) header.widthDevMM / header.widthDevPixels;
@@ -529,7 +570,8 @@ public class EMFDeviceContext implements EMFOpCodes {
 
 	/**
 	 * Returns the length (in mm) of one vertical device unit.
-	 * 
+	 *
+	 * @return the length, in mm, of one vertical device unit.
 	 */
 	public double getYScale() {
 		return (double) header.heightDevMM / header.heightDevPixels;
@@ -726,22 +768,31 @@ public class EMFDeviceContext implements EMFOpCodes {
 	}
 
 	
+	/**
+	 * Selects a graphical object into the device context.
+	 *
+	 * @param nobj the object id, as returned when the object was created.
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public void selectObject(long nobj) throws IOException {
 		addCommandX(EMR_SELECTOBJECT, nobj);
 	}
 
 	/**
-	 * @throws IOException
-	 * 
+	 * Closes the current figure of the current path.
+	 *
+	 * @throws IOException if the stream cannot be written to.
 	 */
 	public void closeFigure() throws IOException {
 		addCommand(EMR_CLOSEFIGURE);
 	}
 
 	/**
-	 * @param x
-	 * @param y
-	 * @throws IOException
+	 * Sets the window origin.
+	 *
+	 * @param x the window origin x coordinate.
+	 * @param y the window origin y coordinate.
+	 * @throws IOException if the stream cannot be written to.
 	 */
 	public void setWindowOrg(int x, int y) throws IOException {
 		addCommandXY(EMR_SETWINDOWORGEX, x, y);
@@ -749,10 +800,10 @@ public class EMFDeviceContext implements EMFOpCodes {
 
 	/**
 	 * Sets the reference window extension.
-	 * 
-	 * @param w
-	 * @param h
-	 * @throws IOException
+	 *
+	 * @param w the window width, in logical units.
+	 * @param h the window height, in logical units.
+	 * @throws IOException if the stream cannot be written to.
 	 */
 	public void setWindowExt(int w, int h) throws IOException {
 		addCommandXY(EMR_SETWINDOWEXTEX, w, h);
@@ -760,10 +811,10 @@ public class EMFDeviceContext implements EMFOpCodes {
 
 	/**
 	 * Sets window origin.
-	 * 
-	 * @param x
-	 * @param y
-	 * @throws java.io.IOException
+	 *
+	 * @param x the window origin x coordinate.
+	 * @param y the window origin y coordinate.
+	 * @throws java.io.IOException if the stream cannot be written to.
 	 */
 	public void setWindowOrgEx(int x, int y) throws IOException {
 		addCommandXY(EMR_SETWINDOWORGEX, x, y);
@@ -771,9 +822,10 @@ public class EMFDeviceContext implements EMFOpCodes {
 
 	/**
 	 * Defines window size in logical units.
-	 * 
-	 * @param w
-	 * @param h
+	 *
+	 * @param w the window width, in logical units.
+	 * @param h the window height, in logical units.
+	 * @throws java.io.IOException if the stream cannot be written to.
 	 */
 	public void setWindowExtEx(int w, int h) throws IOException {
 		addCommandXY(EMR_SETWINDOWEXTEX, w, h);
@@ -784,17 +836,29 @@ public class EMFDeviceContext implements EMFOpCodes {
 	 * 
 	 * @param bkMode
 	 *            one of WMFConstants.TRANSPARENT or WMFConstants.OPAQUE
-	 * @throws java.io.IOException
+	 * @throws java.io.IOException if the stream cannot be written to.
 	 * @see WMFConstants
 	 */
 	public void setBkMode(int bkMode) throws IOException {
 		addCommandX(EMR_SETBKMODE, bkMode);
 	}
 
+	/**
+	 * Draws a line from the current point to the given point.
+	 *
+	 * @param point the destination point.
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public void lineTo(EMFPoint point) throws IOException {
 		lineTo(point.getX(), point.getY());
 	}
 
+	/**
+	 * Moves the current point.
+	 *
+	 * @param point the new current point.
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public void moveToEx(EMFPoint point) throws IOException {
 		moveToEx(point.getX(), point.getY());
 	}
@@ -819,7 +883,7 @@ public class EMFDeviceContext implements EMFOpCodes {
 	 * @param fillStyle
 	 *            one of BS_SOLID, BS_NULL or BS_HATCHED.
 	 * @return the new pen.
-	 * @throws IOException
+	 * @throws IOException if the stream cannot be written to.
 	 */
 	public EMFPen createPenBrush(int penStyle, short width, long penColour,
 			short fillhatch, long fillColour, int fillStyle) throws IOException {
@@ -828,56 +892,130 @@ public class EMFDeviceContext implements EMFOpCodes {
 		return new EMFPen(p, b);
 	}
 
+	/**
+	 * Creates a pen for drawing (no fill) with an explicit pen style.
+	 *
+	 * @param penStyle a pen style (from {@link WMFConstants}).
+	 * @param width the pen width, in 1/1440 of an inch.
+	 * @param colour the line colour, in the form 0xRRGGBB.
+	 * @return the new pen.
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public EMFPen createDrawPen(int penStyle, short width, long colour)
 			throws IOException {
 		return createPenBrush(penStyle, width, colour,
 				WMFConstants.HS_VERTICAL, colour, WMFConstants.BS_NULL);
 	}
 
+	/**
+	 * Creates a solid pen for drawing (no fill).
+	 *
+	 * @param width the pen width, in 1/1440 of an inch.
+	 * @param colour the line colour, in the form 0xRRGGBB.
+	 * @return the new pen.
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public EMFPen createDrawPen(short width, long colour) throws IOException {
 		return createPenBrush(WMFConstants.PS_SOLID, width, colour,
 				WMFConstants.HS_VERTICAL, colour, WMFConstants.BS_NULL);
 	}
 
+	/**
+	 * Creates a pen for filling (no stroke).
+	 *
+	 * @param fillHatch a hatch style (from {@link WMFConstants}).
+	 * @param colour the fill colour, in the form 0xRRGGBB.
+	 * @param fillStyle a brush style (from {@link WMFConstants}).
+	 * @return the new pen.
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public EMFPen createFillPen(short fillHatch, long colour, int fillStyle)
 			throws IOException {
 		return createPenBrush(WMFConstants.PS_NULL, (short) 0, colour,
 				fillHatch, colour, fillStyle);
 	}
 
+	/**
+	 * Deletes a pen and frees the pen and brush handles it uses.
+	 *
+	 * @param pen the pen to delete.
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public void deletePen(EMFPen pen) throws IOException {
 		deleteObject(pen.brushNum);
 		deleteObject(pen.penNum);
 	}
 
+	/**
+	 * Saves the current device context state.
+	 *
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public void saveDC() throws IOException {
 		addCommand(EMR_SAVEDC);
 	}
 
+	/**
+	 * Restores the previously saved device context state.
+	 *
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public void restoreDC() throws IOException {
 		addCommandX(EMR_RESTOREDC, 1);
 	}
 
+	/**
+	 * Creates a solid fill pen (no stroke).
+	 *
+	 * @param colour the fill colour, in the form 0xRRGGBB.
+	 * @return the new pen.
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public EMFPen createFillPen(long colour) throws IOException {
 		return createPenBrush(WMFConstants.PS_NULL, (short) 0, colour,
 				WMFConstants.HS_VERTICAL, colour, WMFConstants.BS_SOLID);
 	}
 
+	/**
+	 * Selects a pen (both its pen and brush objects) into the device context.
+	 *
+	 * @param pen the pen to select.
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public void selectPen(EMFPen pen) throws IOException {
 		selectObject(pen.getPenNum());
 		selectObject(pen.getBrushNum());
 	}
 
+	/**
+	 * Frees a pen by deleting both its pen and brush objects.
+	 *
+	 * @param pen the pen to free.
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public void freePen(EMFPen pen) throws IOException {
 		deleteObject(pen.getPenNum());
 		deleteObject(pen.getBrushNum());
 	}
 
+	/**
+	 * Sets the viewport origin.
+	 *
+	 * @param x the viewport origin x coordinate.
+	 * @param y the viewport origin y coordinate.
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public void setViewPortOrgEx(int x, int y) throws IOException {
 		addCommandXY(EMR_SETVIEWPORTORGEX, x, y);
 
 	}
 
+	/**
+	 * Sets the text colour.
+	 *
+	 * @param col the text colour, in the form 0xRRGGBB.
+	 * @throws IOException if the stream cannot be written to.
+	 */
 	public void setTextColor(int col) throws IOException {
 		addCommandX(EMR_SETTEXTCOLOR, col);
 	}

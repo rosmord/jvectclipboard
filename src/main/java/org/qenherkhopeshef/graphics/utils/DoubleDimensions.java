@@ -18,6 +18,12 @@ public class DoubleDimensions extends Dimension2D {
 	private double height;
 	private double width;
 	
+	/**
+	 * Builds a dimension with the given width and height.
+	 *
+	 * @param width the width.
+	 * @param height the height.
+	 */
 	public DoubleDimensions(double width, double height) {
 		setSize(width, height);
 	}

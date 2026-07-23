@@ -29,6 +29,14 @@ public class BitmapStreamGraphics extends StreamGraphics2DDelegate {
 	String format;
 	BufferedImage image;
 
+	/**
+	 * Builds a bitmap graphics writing to a stream.
+	 *
+	 * @param out the stream the image will be written to on {@link #dispose()}.
+	 * @param dim the picture dimensions, in pixels.
+	 * @param format the image format name, as understood by {@link ImageIO} (e.g. "png").
+	 * @param transparency if true, the image keeps an alpha channel.
+	 */
 	public BitmapStreamGraphics(OutputStream out, Dimension2D dim,
 			String format, boolean transparency) {
 		this.format = format;
@@ -46,6 +54,11 @@ public class BitmapStreamGraphics extends StreamGraphics2DDelegate {
 		GraphicsUtils.antialias(proxy);
 	}
 
+	/**
+	 * Fills the whole image with the given colour.
+	 *
+	 * @param color the colour to fill the image with.
+	 */
 	public void fillWith(Color color) {
 			Color oldColor= proxy.getBackground();
 			proxy.setBackground(color);

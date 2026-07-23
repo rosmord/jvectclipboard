@@ -218,8 +218,10 @@ abstract public class StreamGraphics2DDelegate extends BaseGraphics2D {
     }
     
     /**
-     * @deprecated
+     * @deprecated as in {@link Graphics}, replaced by {@link #getClipBounds()}.
+     * @return the bounding rectangle of the current clipping area.
      */
+    @Deprecated
     public Rectangle getClipRect() {
         return proxy.getClipRect();
     }

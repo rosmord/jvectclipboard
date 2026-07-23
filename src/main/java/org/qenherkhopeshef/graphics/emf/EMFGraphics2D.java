@@ -57,8 +57,8 @@ public class EMFGraphics2D extends BaseGraphics2D {
 	 *            software creating the picture (may be null)
 	 * @param comment
 	 *            free text comment included in the picture (may be null too).
-	 * 
-	 * @throws java.io.IOException
+	 *
+	 * @throws java.io.IOException if the file cannot be written to.
 	 */
 	public EMFGraphics2D(File file, Dimension2D dims, String creator,
 			String comment) throws IOException {
@@ -74,14 +74,14 @@ public class EMFGraphics2D extends BaseGraphics2D {
 	/**
 	 * Create a picture which without margin.
 	 * 
-	 * @param stream
+	 * @param stream the stream the picture will be written to.
 	 * @param dims pictures dimensions, in <strong>points</strong>
 	 * @param creator
 	 *            software creating the picture (may be null)
 	 * @param comment
 	 *            free text comment included in the picture (may be null too).
-	 * 
-	 * @throws IOException
+	 *
+	 * @throws IOException if the stream cannot be written to.
 	 */
 	public EMFGraphics2D(RandomAccessStream stream, Dimension2D dims,
 			String creator, String comment) throws IOException {
@@ -92,20 +92,28 @@ public class EMFGraphics2D extends BaseGraphics2D {
 
 	/**
 	 * Create a picture which with a given bounding box.
-	 * 
+	 *
+	 * @param out the stream the picture will be written to.
+	 * @param maxx the picture width, in <strong>points</strong>.
+	 * @param maxy the picture height, in <strong>points</strong>.
 	 * @param creator
 	 *            software creating the picture (may be null)
 	 * @param comment
 	 *            free text comment included in the picture (may be null too).
-	 * 
-	 * @param out
-	 * @throws IOException
+	 * @throws IOException if the stream cannot be written to.
 	 */
 	public EMFGraphics2D(RandomAccessStream out, long maxx, long maxy,
 			String creator, String comment) throws IOException {
 		initEMFGraphics2D(out, maxx, maxy, creator, comment);
 	}
 
+	/**
+	 * Builds a graphic context rendering into the same picture as another one.
+	 * <p>
+	 * Used internally to implement {@link #create()}.
+	 *
+	 * @param graphics2D the context to copy the rendering state from.
+	 */
 	public EMFGraphics2D(EMFGraphics2D graphics2D) {
 		super(graphics2D);
 		this.deviceContext = graphics2D.deviceContext;
@@ -159,8 +167,12 @@ public class EMFGraphics2D extends BaseGraphics2D {
 	}
 
 	/**
-	 * 
 	 * Sets an explicit clip rectangle for the mac picture.
+	 *
+	 * @param minx the left edge of the clip rectangle.
+	 * @param miny the top edge of the clip rectangle.
+	 * @param maxx the right edge of the clip rectangle.
+	 * @param maxy the bottom edge of the clip rectangle.
 	 */
 	public void setPictureClip(double minx, double miny, double maxx,
 			double maxy) {
