@@ -215,7 +215,11 @@ public class SVGGraphics2D extends BaseGraphics2D {
             float lineWidth = bs.getLineWidth();
             Point2D p = deviceCoords(new Point2D.Float(lineWidth, lineWidth));
             Point2D p0 = deviceCoords(new Point2D.Float(0, 0));
-            svgOut.setStrokeWidth((int) Math.ceil(p.getX() - p0.getX()));
+            // Use the absolute value: with a mirrored transform (e.g.
+            // right-to-left text orientation) the X scale is negative, so the
+            // raw delta would be negative and Math.ceil would collapse it to 0,
+            // producing an invisible stroke-width:0.
+            svgOut.setStrokeWidth((int) Math.ceil(Math.abs(p.getX() - p0.getX())));
         }
     }
 

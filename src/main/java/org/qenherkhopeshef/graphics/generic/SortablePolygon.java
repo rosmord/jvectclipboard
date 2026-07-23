@@ -9,12 +9,12 @@ import java.util.List;
  * @author rosmord
  * 
  */
-public class SortablePolygon implements Comparable {
+public class SortablePolygon implements Comparable<SortablePolygon> {
 	public double minx;
 
-	public List points;
+	public List<Point2D> points;
 
-	public SortablePolygon(List points) {
+	public SortablePolygon(List<Point2D> points) {
 		this.points = points;
 		if (points.size() > 0) {
 			minx = ((Point2D) points.get(0)).getX();
@@ -26,8 +26,7 @@ public class SortablePolygon implements Comparable {
 		}
 	}
 
-	public int compareTo(Object arg0) {
-		SortablePolygon pol2 = (SortablePolygon) arg0;
+	public int compareTo(SortablePolygon pol2) {		
 		double diff = (minx - pol2.minx);
 		int result;
 		if (diff < 0)

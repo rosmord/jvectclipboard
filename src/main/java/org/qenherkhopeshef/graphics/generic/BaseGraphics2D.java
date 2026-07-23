@@ -105,7 +105,7 @@ public abstract class BaseGraphics2D extends Graphics2D {
 	 * <p>
 	 * To be used when writting copy constructor for subclasses.
 	 * 
-	 * @param g
+	 * @param g graphic context
 	 */
 	public BaseGraphics2D(BaseGraphics2D g) {
 		// We should ge sure that shapes are immutable ?

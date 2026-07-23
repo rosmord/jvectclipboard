@@ -26,7 +26,8 @@ public class SVGLowLevel {
     public SVGLowLevel(Writer writer, java.awt.geom.Dimension2D dimensions)
             throws IOException {
         this.writer = writer;
-        writer.write("<?xml version='1.0' encoding='UTF-8' standalone='yes'?>");
+        // writer.write("<?xml version='1.0' encoding='UTF-8' standalone='yes'?>");
+        writer.write("<?xml version='1.0' encoding='UTF-8'?>");
 
 		// SVG opening tag MUST contain the following namespace declarations:
         // <svg xmlns="http://www.w3.org/2000/svg"
@@ -35,9 +36,10 @@ public class SVGLowLevel {
         double height = dimensions.getHeight();
         String[][] attributes = new String[][]{
             {"xmlns", "http://www.w3.org/2000/svg"},
-            {"xmlns:xlink", "http://www.w3.org/1999/xlink"},
+            // {"xmlns:xlink", "http://www.w3.org/1999/xlink"},
             {"width", "" + width},
-            {"height", "" + height}
+            {"height", "" + height},
+            {"version", "1.1"}
         };
         generateStartTag("svg", attributes);
     }

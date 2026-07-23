@@ -18,3 +18,12 @@ To declare PDF as a legitimate copy/paste format, you need to execute the follow
  ((SystemFlavorMap) SystemFlavorMap.getDefaultFlavorMap())
                 .addUnencodedNativeForFlavor(PDFTransferable.PDF_FLAVOR, "PDF");
 ~~~
+
+## History
+
+
+8.1.1
+: fixed a bug in SVG: lines width were not correctly set in the SVG output for some transformations (it could be negative).
+
+8.1.0
+: modified the SVG output to add SVG version.

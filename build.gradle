@@ -1,26 +1,33 @@
 plugins {
     // Apply the java-library plugin to add support for Java Library
-    id 'java-library'
+    id 'java-library'    
     id 'maven-publish'
+    id 'signing'
 }
 
-version = "8.0.0"
+version = "8.1.1"
 group = "org.qenherkhopeshef"
 
-ext {
-  archivesBaseName = "jvectclipboard"
-}
+// See https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html
 
 java {
   toolchain {
-    languageVersion = JavaLanguageVersion.of(8)
+    languageVersion = JavaLanguageVersion.of(21)
   }
+  withJavadocJar()
+  withSourcesJar()
 }
+
 compileJava.options.encoding = 'UTF-8'
 
+base {
+    distsDirectory = layout.buildDirectory.dir('custom-dist')
+    libsDirectory = layout.buildDirectory.dir('custom-libs')    
+}
 
 repositories {
     mavenLocal()
+    mavenCentral()
 }
 
 
@@ -40,23 +47,67 @@ task distClean {
 }
 
 dependencies {
-    implementation 'com.lowagie:itext:2.1.5'  
+    implementation 'com.lowagie:itext:2.1.5'
+    testImplementation("org.junit.jupiter:junit-jupiter:6.0.1")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
+
+test {
+    useJUnitPlatform()
+}
+
+// The maven publishing plugin doesn't work with the new https://central.sonatype.org organisation.
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = "${archivesBaseName}"
             from components.java
-            versionMapping {
-                usage('java-api') {
-                    fromResolutionOf('runtimeClasspath')
+            artifactId = "jvectclipboard" 
+
+            pom {
+                name.set("JVectClipboard")
+                description.set("simple Swing graphical library to allow copy/paste to various graphical formats")
+                url.set("https://github.com/rosmord/jvectclipboard")
+                licenses {
+                    license {
+                        name.set("GNU Lesser General Public License v2.1")
+                        url.set("https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html")
+                        distribution.set("repo")                        
+                    }
                 }
-                usage('java-runtime') {
-                    fromResolutionResult()
+                developers {
+                    developer {                  
+                        id.set("rosmord")
+                        name.set("Serge Rosmorduc")
+                        email.set("serge.rosmorduc@qenherkhopeshef.org")
+                    }
                 }
+                scm {
+                    connection.set("scm:git:git@github.com:rosmord/jvectclipboard.git")
+                    developerConnection.set("scm:git:git@github.com:rosmord/jvectclipboard.git")
+                    url.set("https://github.com/rosmord/jvectclipboard")
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = "SonatypeCentral"
+            url = uri("https://central.sonatype.com/api/v1/publish")
+            /*
+            url = version.endsWith("SNAPSHOT") ?
+                 uri("https://oss.sonatype.org/content/repositories/snapshots/") :
+                 uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+                 */
+            credentials {
+                username = findProperty("ossrhUsername") ?: System.getenv("OSSRH_USERNAME")
+                password = findProperty("ossrhPassword") ?: System.getenv("OSSRH_PASSWORD")
             }
         }
     }
 }
 
+signing {
+    useGpgCmd()
+    sign publishing.publications.mavenJava
+}
