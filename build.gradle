@@ -1,8 +1,9 @@
 plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'    
-    id 'maven-publish'
-    id 'signing'
+    //id 'maven-publish' // for publishing to Maven Local
+    id 'com.vanniktech.maven.publish' version '0.37.0'  // check plugins.gradle.org for the latest patch
+
 }
 
 version = "8.1.1"
@@ -30,6 +31,48 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    implementation 'com.lowagie:itext:2.1.5'
+    testImplementation("org.junit.jupiter:junit-jupiter:6.0.1")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+test {
+    useJUnitPlatform()
+}
+
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
+
+    coordinates("org.qenherkhopeshef", "jvectclipboard", version.toString()) // keep lowercase artifactId for existing consumers
+
+    pom {
+        name.set("JVectClipboard")
+        description.set("simple Swing graphical library to allow copy/paste to various graphical formats")
+        url.set("https://github.com/rosmord/jvectclipboard")
+        licenses {
+            license {
+                name.set("GNU Lesser General Public License v2.1")
+                url.set("https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html")
+                distribution.set("repo")
+            }
+        }
+        developers {
+            developer {
+                id.set("rosmord")
+                name.set("Serge Rosmorduc")
+                email.set("serge.rosmorduc@qenherkhopeshef.org")
+            }
+        }
+        scm {
+            connection.set("scm:git:git@github.com:rosmord/jvectclipboard.git")
+            developerConnection.set("scm:git:git@github.com:rosmord/jvectclipboard.git")
+            url.set("https://github.com/rosmord/jvectclipboard")
+        }
+    }
+}
+
 
 task distClean {
     dependsOn('clean')
@@ -44,70 +87,4 @@ task distClean {
             delete '.DS_Store'
             delete '.idea'
     }
-}
-
-dependencies {
-    implementation 'com.lowagie:itext:2.1.5'
-    testImplementation("org.junit.jupiter:junit-jupiter:6.0.1")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-}
-
-test {
-    useJUnitPlatform()
-}
-
-// The maven publishing plugin doesn't work with the new https://central.sonatype.org organisation.
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifactId = "jvectclipboard" 
-
-            pom {
-                name.set("JVectClipboard")
-                description.set("simple Swing graphical library to allow copy/paste to various graphical formats")
-                url.set("https://github.com/rosmord/jvectclipboard")
-                licenses {
-                    license {
-                        name.set("GNU Lesser General Public License v2.1")
-                        url.set("https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html")
-                        distribution.set("repo")                        
-                    }
-                }
-                developers {
-                    developer {                  
-                        id.set("rosmord")
-                        name.set("Serge Rosmorduc")
-                        email.set("serge.rosmorduc@qenherkhopeshef.org")
-                    }
-                }
-                scm {
-                    connection.set("scm:git:git@github.com:rosmord/jvectclipboard.git")
-                    developerConnection.set("scm:git:git@github.com:rosmord/jvectclipboard.git")
-                    url.set("https://github.com/rosmord/jvectclipboard")
-                }
-            }
-        }
-    }
-    repositories {
-        maven {
-            name = "SonatypeCentral"
-            url = uri("https://central.sonatype.com/api/v1/publish")
-            /*
-            url = version.endsWith("SNAPSHOT") ?
-                 uri("https://oss.sonatype.org/content/repositories/snapshots/") :
-                 uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-                 */
-            credentials {
-                username = findProperty("ossrhUsername") ?: System.getenv("OSSRH_USERNAME")
-                password = findProperty("ossrhPassword") ?: System.getenv("OSSRH_PASSWORD")
-            }
-        }
-    }
-}
-
-signing {
-    useGpgCmd()
-    sign publishing.publications.mavenJava
 }
