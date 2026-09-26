@@ -6,7 +6,7 @@ plugins {
 
 }
 
-version = "8.1.1"
+version = "8.1.2"
 group = "org.qenherkhopeshef"
 
 // See https://docs.gradle.org/current/dsl/org.gradle.api.publish.maven.MavenPublication.html

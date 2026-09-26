@@ -355,8 +355,10 @@ public class EMFGraphics2D extends BaseGraphics2D {
 	private EMFPoint deviceCoords(Point2D p) {
 		Point2D res = new Point2D.Double();
 		getTransform().transform(p, res);
-		return new EMFPoint((short) (res.getX() * deviceScale),
-				(short) (res.getY() * deviceScale));
+		// EMF points are 32-bit: a cast to short would wrap coordinates beyond
+		// 32767 device units (about 33 cm at the default scale).
+		return new EMFPoint(Math.round(res.getX() * deviceScale),
+				Math.round(res.getY() * deviceScale));
 	}
 
 }
